@@ -1,0 +1,183 @@
+<html>
+<head>
+<title>AgendamentoConsultasApp.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #6a8759;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+AgendamentoConsultasApp.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">view</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">controller.ConsultaController</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">exception.AppException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">model.Consulta</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.swing.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.awt.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalDate</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalTime</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.format.DateTimeFormatter</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.format.DateTimeParseException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.format.FormatStyle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Collections</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">AgendamentoConsultasApp {</span>
+    <span class="s0">private final </span><span class="s1">ConsultaController consultaController</span><span class="s0">;</span>
+
+    <span class="s0">private </span><span class="s1">JFrame frame</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">JTextField txtData</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">JTextField txtHora</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">JTextField txtPaciente</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">JTextArea txtAreaConsultas</span><span class="s0">;</span>
+
+    <span class="s0">public </span><span class="s1">AgendamentoConsultasApp() {</span>
+        <span class="s1">consultaController = </span><span class="s0">new </span><span class="s1">ConsultaController()</span><span class="s0">;</span>
+        <span class="s1">initialize()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">initialize() {</span>
+        <span class="s1">frame = </span><span class="s0">new </span><span class="s1">JFrame()</span><span class="s0">;</span>
+        <span class="s1">frame.setBounds(</span><span class="s2">100</span><span class="s0">, </span><span class="s2">100</span><span class="s0">, </span><span class="s2">600</span><span class="s0">, </span><span class="s2">500</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().setLayout(</span><span class="s0">null</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">JLabel lblData = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s3">&quot;Data:&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">lblData.setBounds(</span><span class="s2">10</span><span class="s0">, </span><span class="s2">11</span><span class="s0">, </span><span class="s2">46</span><span class="s0">, </span><span class="s2">14</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(lblData)</span><span class="s0">;</span>
+
+        <span class="s1">txtData = </span><span class="s0">new </span><span class="s1">JTextField()</span><span class="s0">;</span>
+        <span class="s1">txtData.setBounds(</span><span class="s2">66</span><span class="s0">, </span><span class="s2">8</span><span class="s0">, </span><span class="s2">86</span><span class="s0">, </span><span class="s2">20</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(txtData)</span><span class="s0">;</span>
+        <span class="s1">txtData.setColumns(</span><span class="s2">10</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">JLabel lblHora = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s3">&quot;Hora:&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">lblHora.setBounds(</span><span class="s2">10</span><span class="s0">, </span><span class="s2">36</span><span class="s0">, </span><span class="s2">46</span><span class="s0">, </span><span class="s2">14</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(lblHora)</span><span class="s0">;</span>
+
+        <span class="s1">txtHora = </span><span class="s0">new </span><span class="s1">JTextField()</span><span class="s0">;</span>
+        <span class="s1">txtHora.setBounds(</span><span class="s2">66</span><span class="s0">, </span><span class="s2">33</span><span class="s0">, </span><span class="s2">86</span><span class="s0">, </span><span class="s2">20</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(txtHora)</span><span class="s0">;</span>
+        <span class="s1">txtHora.setColumns(</span><span class="s2">10</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">JLabel lblPaciente = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s3">&quot;Paciente:&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">lblPaciente.setBounds(</span><span class="s2">10</span><span class="s0">, </span><span class="s2">61</span><span class="s0">, </span><span class="s2">57</span><span class="s0">, </span><span class="s2">14</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(lblPaciente)</span><span class="s0">;</span>
+
+        <span class="s1">txtPaciente = </span><span class="s0">new </span><span class="s1">JTextField()</span><span class="s0">;</span>
+        <span class="s1">txtPaciente.setBounds(</span><span class="s2">66</span><span class="s0">, </span><span class="s2">58</span><span class="s0">, </span><span class="s2">134</span><span class="s0">, </span><span class="s2">20</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(txtPaciente)</span><span class="s0">;</span>
+        <span class="s1">txtPaciente.setColumns(</span><span class="s2">10</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">JButton btnAgendar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s3">&quot;Agendar&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btnAgendar.addActionListener(e -&gt; agendarConsulta())</span><span class="s0">;</span>
+        <span class="s1">btnAgendar.setBounds(</span><span class="s2">10</span><span class="s0">, </span><span class="s2">86</span><span class="s0">, </span><span class="s2">89</span><span class="s0">, </span><span class="s2">23</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(btnAgendar)</span><span class="s0">;</span>
+
+        <span class="s1">txtAreaConsultas = </span><span class="s0">new </span><span class="s1">JTextArea()</span><span class="s0">;</span>
+        <span class="s1">txtAreaConsultas.setEditable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">txtAreaConsultas.setBounds(</span><span class="s2">210</span><span class="s0">, </span><span class="s2">50</span><span class="s0">, </span><span class="s2">370</span><span class="s0">, </span><span class="s2">240</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(txtAreaConsultas)</span><span class="s0">;</span>
+
+        <span class="s1">JLabel lblConsultas = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s3">&quot;Consultas:&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">lblConsultas.setBounds(</span><span class="s2">210</span><span class="s0">, </span><span class="s2">20</span><span class="s0">, </span><span class="s2">214</span><span class="s0">, </span><span class="s2">14</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(lblConsultas)</span><span class="s0">;</span>
+
+        <span class="s1">JButton btnAtualizar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s3">&quot;Atualizar&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btnAtualizar.addActionListener(e -&gt; listarConsultas())</span><span class="s0">;</span>
+        <span class="s1">btnAtualizar.setBounds(</span><span class="s2">10</span><span class="s0">, </span><span class="s2">262</span><span class="s0">, </span><span class="s2">89</span><span class="s0">, </span><span class="s2">23</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(btnAtualizar)</span><span class="s0">;</span>
+
+        <span class="s1">JButton btnEncerrar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s3">&quot;Encerrar&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btnEncerrar.addActionListener(e -&gt; encerrar())</span><span class="s0">;</span>
+        <span class="s1">btnEncerrar.setBounds(</span><span class="s2">110</span><span class="s0">, </span><span class="s2">262</span><span class="s0">, </span><span class="s2">89</span><span class="s0">, </span><span class="s2">23</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">frame.getContentPane().add(btnEncerrar)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">show() {</span>
+        <span class="s1">frame.setVisible(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">agendarConsulta() {</span>
+        <span class="s1">String data = txtData.getText()</span><span class="s0">;</span>
+        <span class="s1">String hora = txtHora.getText()</span><span class="s0">;</span>
+        <span class="s1">String paciente = txtPaciente.getText()</span><span class="s0">;</span>
+
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">DateTimeFormatter formatter = DateTimeFormatter.ofPattern(</span><span class="s3">&quot;dd/MM/yyyy&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">LocalDate localDate = LocalDate.parse(data</span><span class="s0">, </span><span class="s1">formatter)</span><span class="s0">;</span>
+            <span class="s1">LocalTime localTime = LocalTime.parse(hora)</span><span class="s0">;</span>
+
+            <span class="s1">Consulta consulta = </span><span class="s0">new </span><span class="s1">Consulta(</span><span class="s2">0</span><span class="s0">, </span><span class="s1">localDate</span><span class="s0">, </span><span class="s1">localTime</span><span class="s0">, </span><span class="s1">paciente)</span><span class="s0">;</span>
+            <span class="s1">consultaController.agendarConsulta(consulta)</span><span class="s0">;</span>
+
+            <span class="s1">JOptionPane.showMessageDialog(frame</span><span class="s0">, </span><span class="s3">&quot;Consulta agendada com sucesso!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+            <span class="s1">txtData.setText(</span><span class="s3">&quot;&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">txtHora.setText(</span><span class="s3">&quot;&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">txtPaciente.setText(</span><span class="s3">&quot;&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(DateTimeParseException ex) {</span>
+            <span class="s1">JOptionPane.showMessageDialog(frame</span><span class="s0">, </span><span class="s3">&quot;Erro ao agendar consulta: formato de data ou hora inválido!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(Exception ex) {</span>
+            <span class="s1">JOptionPane.showMessageDialog(frame</span><span class="s0">, </span><span class="s3">&quot;Erro ao agendar consulta: &quot; </span><span class="s1">+ ex.getMessage())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+
+    <span class="s0">private void </span><span class="s1">listarConsultas() {</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">List&lt;Consulta&gt; consultas = consultaController.listarConsultas()</span><span class="s0">;</span>
+
+            <span class="s4">// Ordenar as consultas por data e hora</span>
+            <span class="s1">Collections.sort(consultas</span><span class="s0">, </span><span class="s1">(c1</span><span class="s0">, </span><span class="s1">c2) -&gt; {</span>
+                <span class="s0">int </span><span class="s1">compareDates = c1.getData().compareTo(c2.getData())</span><span class="s0">;</span>
+                <span class="s0">if </span><span class="s1">(compareDates == </span><span class="s2">0</span><span class="s1">) {</span>
+                    <span class="s0">return </span><span class="s1">c1.getHora().compareTo(c2.getHora())</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s0">return </span><span class="s1">compareDates</span><span class="s0">;</span>
+            <span class="s1">})</span><span class="s0">;</span>
+
+            <span class="s1">StringBuilder sb = </span><span class="s0">new </span><span class="s1">StringBuilder()</span><span class="s0">;</span>
+            <span class="s0">for </span><span class="s1">(Consulta consulta : consultas) {</span>
+                <span class="s1">DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)</span><span class="s0">;</span>
+                <span class="s1">sb.append(</span><span class="s3">&quot;ID: &quot;</span><span class="s1">).append(consulta.getId())</span>
+                        <span class="s1">.append(</span><span class="s3">&quot;, Data: &quot;</span><span class="s1">).append(consulta.getData().format(formatoBrasileiro))</span>
+                        <span class="s1">.append(</span><span class="s3">&quot;, Hora: &quot;</span><span class="s1">).append(consulta.getHora())</span>
+                        <span class="s1">.append(</span><span class="s3">&quot;, Paciente: &quot;</span><span class="s1">).append(consulta.getPaciente())</span>
+                        <span class="s1">.append(</span><span class="s3">&quot;</span><span class="s0">\n</span><span class="s3">&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+
+            <span class="s1">txtAreaConsultas.setText(sb.toString())</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(AppException ex) {</span>
+            <span class="s1">JOptionPane.showMessageDialog(frame</span><span class="s0">, </span><span class="s3">&quot;Erro ao listar consultas: &quot; </span><span class="s1">+ ex.getMessage())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">encerrar() {</span>
+        <span class="s1">frame.dispose()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public static void </span><span class="s1">main(String[] args) {</span>
+        <span class="s1">EventQueue.invokeLater(() -&gt; {</span>
+            <span class="s0">try </span><span class="s1">{</span>
+                <span class="s1">AgendamentoConsultasApp window = </span><span class="s0">new </span><span class="s1">AgendamentoConsultasApp()</span><span class="s0">;</span>
+                <span class="s1">window.show()</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">catch </span><span class="s1">(Exception e) {</span>
+                <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

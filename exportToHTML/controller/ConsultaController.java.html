@@ -1,0 +1,91 @@
+<html>
+<head>
+<title>ConsultaController.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ConsultaController.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">controller</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">exception.AppException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">model.Consulta</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">util.DBUtil</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.sql.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalDate</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalTime</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">ConsultaController {</span>
+    <span class="s0">public </span><span class="s1">List&lt;Consulta&gt; listarConsultas() </span><span class="s0">throws </span><span class="s1">AppException {</span>
+        <span class="s0">try </span><span class="s1">(Connection connection = DBUtil.getConnection()</span><span class="s0">;</span>
+             <span class="s1">Statement statement = connection.createStatement()</span><span class="s0">;</span>
+             <span class="s1">ResultSet resultSet = statement.executeQuery(</span><span class="s2">&quot;SELECT * FROM consultas&quot;</span><span class="s1">)) {</span>
+
+            <span class="s1">List&lt;Consulta&gt; consultas = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+
+            <span class="s0">while </span><span class="s1">(resultSet.next()) {</span>
+                <span class="s0">int </span><span class="s1">id = resultSet.getInt(</span><span class="s2">&quot;id&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">LocalDate data = resultSet.getDate(</span><span class="s2">&quot;data&quot;</span><span class="s1">).toLocalDate()</span><span class="s0">;</span>
+                <span class="s1">LocalTime hora = resultSet.getTime(</span><span class="s2">&quot;hora&quot;</span><span class="s1">).toLocalTime()</span><span class="s0">;</span>
+                <span class="s1">String paciente = resultSet.getString(</span><span class="s2">&quot;paciente&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+                <span class="s1">Consulta consulta = </span><span class="s0">new </span><span class="s1">Consulta(id</span><span class="s0">, </span><span class="s1">data</span><span class="s0">, </span><span class="s1">hora</span><span class="s0">, </span><span class="s1">paciente)</span><span class="s0">;</span>
+                <span class="s1">consultas.add(consulta)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+
+            <span class="s0">return </span><span class="s1">consultas</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(SQLException e) {</span>
+            <span class="s0">throw new </span><span class="s1">AppException(</span><span class="s2">&quot;Erro ao listar consultas: &quot; </span><span class="s1">+ e.getMessage())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+
+
+    <span class="s0">public void </span><span class="s1">agendarConsulta(Consulta consulta) </span><span class="s0">throws </span><span class="s1">AppException {</span>
+        <span class="s1">String paciente = consulta.getPaciente()</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(!isNomeValido(paciente)) {</span>
+            <span class="s0">throw new </span><span class="s1">AppException(</span><span class="s2">&quot;O nome do paciente deve começar com uma letra maiúscula&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">try </span><span class="s1">(Connection connection = DBUtil.getConnection()</span><span class="s0">;</span>
+             <span class="s1">PreparedStatement preparedStatement = connection.prepareStatement(</span>
+                     <span class="s2">&quot;INSERT INTO consultas (data, hora, paciente) VALUES (?, ?, ?)&quot;</span><span class="s0">, </span><span class="s1">Statement.RETURN_GENERATED_KEYS)) {</span>
+
+            <span class="s1">preparedStatement.setDate(</span><span class="s3">1</span><span class="s0">, </span><span class="s1">Date.valueOf(consulta.getData()))</span><span class="s0">;</span>
+            <span class="s1">preparedStatement.setTime(</span><span class="s3">2</span><span class="s0">, </span><span class="s1">Time.valueOf(consulta.getHora()))</span><span class="s0">;</span>
+            <span class="s1">preparedStatement.setString(</span><span class="s3">3</span><span class="s0">, </span><span class="s1">paciente)</span><span class="s0">;</span>
+            <span class="s1">preparedStatement.executeUpdate()</span><span class="s0">;</span>
+
+            <span class="s1">ResultSet generatedKeys = preparedStatement.getGeneratedKeys()</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(generatedKeys.next()) {</span>
+                <span class="s1">consulta.setId(generatedKeys.getInt(</span><span class="s3">1</span><span class="s1">))</span><span class="s0">;</span>
+            <span class="s1">}</span>
+
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(SQLException e) {</span>
+            <span class="s0">throw new </span><span class="s1">AppException(</span><span class="s2">&quot;Erro ao agendar consulta: &quot; </span><span class="s1">+ e.getMessage())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private boolean </span><span class="s1">isNomeValido(String nome) {</span>
+        <span class="s0">return </span><span class="s1">Character.isUpperCase(nome.charAt(</span><span class="s3">0</span><span class="s1">))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s4">// Outros métodos de controle (edição, exclusão, etc.)</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>
