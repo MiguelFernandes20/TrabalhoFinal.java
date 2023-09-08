@@ -4,5 +4,6 @@ Projeto Final da Disciplina de Programação 3 no Curso de Bacharel em Sistemas 
 
 # Colaboradores
 
-* Maria Laura Roiz 
-* Hugo Kazita Custódio.
+* [Maria Laura Roriz ](https://github.com/mariialauraa) 
+* [Hugo Kazita Custodio ](https://github.com/HugoKazita)
+  
