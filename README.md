@@ -1,6 +1,6 @@
 # TrabalhoFinal.java
 
-Projeto Final da Disciplina de Programação 3 no Curso de Bacharel em Sistemas de Informação.
+Projeto Final da Disciplina de Programação 3 no Curso de Bacharel em Sistemas de Informação. Resultando em uma avaliação final de 10/10.
 
 # Características do Sistema
 
